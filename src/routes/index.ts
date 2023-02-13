@@ -1,6 +1,5 @@
 import express from "express"
 import resource from './_router'
-import users from "./users"
 import albums from "./albums"
 import photos from "./photos"
 import register from "./register"
@@ -16,8 +15,6 @@ router.get('/', (req, res) => {
 		message: "I AM API, BEEP BOOP",
 	})
 })
-
-router.use("/users", users)
 
 router.use("/register", register)
 

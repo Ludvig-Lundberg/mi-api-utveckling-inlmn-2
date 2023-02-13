@@ -2,6 +2,7 @@ import express from "express"
 import resource from './_router'
 import users from "./users"
 import albums from "./albums"
+import photos from "./photos"
 
 // instantiate a new router
 const router = express.Router()
@@ -18,6 +19,8 @@ router.get('/', (req, res) => {
 router.use("/users", users)
 
 router.use("/albums", albums)
+
+router.use("/photos", photos)
 
 /**
  * [EXAMPLE] /resource

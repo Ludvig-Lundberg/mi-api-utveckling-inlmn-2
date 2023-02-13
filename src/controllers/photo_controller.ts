@@ -4,19 +4,19 @@ import { validationResult } from 'express-validator'
 import prisma from '../prisma'
 
 // Create a new debug instance
-const debug = Debug('fed22_photos:album_controller')
+const debug = Debug('fed22_photos:photo_controller')
 
-// GET alla albums
+// GET alla photos
 export const index = async (req: Request, res: Response) => {
     try {
-        const albums = await prisma.album.findMany()
+        const photos = await prisma.photo.findMany()
 
         res.send({
             status: "success",
-            data: albums,
+            data: photos,
         })
     } catch (err) {
-        debug("Kunde inte hitta albums", err)
+        debug("Kunde inte hitta photos", err)
         res.status(500).send({
             status: "error",
             message: "500: Internal server error"
@@ -24,13 +24,13 @@ export const index = async (req: Request, res: Response) => {
     }
 }
 
-// specifik album
+// specifik photo
 export const show = async (req: Request, res: Response) => {
-    const albumId = Number(req.params.albumId)
+    const photoId = Number(req.params.photoId)
     try {
-        const album = await prisma.album.findUniqueOrThrow({
+        const album = await prisma.photo.findUniqueOrThrow({
             where: {
-                id: albumId,
+                id: photoId,
             },
         })
         res.send({
@@ -38,15 +38,15 @@ export const show = async (req: Request, res: Response) => {
             data: album,
         })
     } catch (err) {
-        debug(`hittar inte album med id: ${albumId}`, err)
+        debug(`hittar inte photo med id: ${photoId}`, err)
         res.status(404).send({
             status: "error",
-            message: "404: album not found"
+            message: "404: photo not found"
         })
     }
 }
 
-// POST:a album
+// POST:a photo
 export const store = async (req: Request, res: Response) => {
     const validationErrors = validationResult(req)
     if (!validationErrors.isEmpty()) {
@@ -55,19 +55,22 @@ export const store = async (req: Request, res: Response) => {
             data: validationErrors.array(),
         })
     }
+    const { title, url, comment, user_id } = req.body
     try {
-        const album = await prisma.album.create({
+        const photo = await prisma.photo.create({
             data: {
-                title: req.body.title,
-                user_id: req.body.user_id
+                title,
+                url,
+                comment,
+                user_id,
             }
         })
         res.send({
             status: "success",
-            data: album
+            data: photo
         })
     } catch (err) {
-        debug("ERROR when creating album", req.body, err)
+        debug("ERROR when creating photo", req.body, err)
 
         res.status(500).send({
             status: "error",

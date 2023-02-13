@@ -1,6 +1,3 @@
-/**
- * Controller Template
- */
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
@@ -42,9 +39,9 @@ export const show = async (req: Request, res: Response) => {
         })
     } catch (err) {
         debug(`hittar inte user med id: ${userId}`, err)
-        res.status(500).send({
+        res.status(404).send({
             status: "error",
-            message: "500: Internal server error"
+            message: "404: user not found"
         })
     }
 }

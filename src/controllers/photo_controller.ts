@@ -6,6 +6,19 @@ import prisma from '../prisma'
 // Create a new debug instance
 const debug = Debug('fed22_photos:photo_controller')
 
+// gör ny index funktion
+
+// kolla header.authorization, ta ut lösenord och användar namn man skickar in
+
+// kolla email mot server, ta ut id på user
+
+// ta lösenord från header, gör om till base64 och jämför lösenord med sever
+
+// nej? unauthorized
+
+// ja? ta ut bilder med som har samma userId som användarens id
+
+
 // GET alla photos
 export const index = async (req: Request, res: Response) => {
     try {

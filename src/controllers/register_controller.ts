@@ -31,9 +31,14 @@ export const register = async (req: Request, res: Response) => {
                 last_name: req.body.last_name,
             }
         })
+        const withoutPassword = {
+            email: req.body.email,
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+        };
         res.status(201).send({
             status: "success",
-            data: user
+            data: withoutPassword
         })
     } catch (err) {
         debug("ERROR when creating user", req.body, err)

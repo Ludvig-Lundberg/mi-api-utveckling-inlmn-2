@@ -15,7 +15,10 @@ router.post('/', [
         if (user) {
             return Promise.reject("Email already in use")
         }
-    })
+    }),
+    body("password").isString().isLength({min: 6}),
+    body("first_name").isString().isLength({min: 3}),
+    body("last_name").isString().isLength({min: 3})
 ], register)
 
 

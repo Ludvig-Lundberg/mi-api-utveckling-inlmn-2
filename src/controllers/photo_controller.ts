@@ -4,13 +4,12 @@ import { validationResult } from 'express-validator'
 import prisma from '../prisma'
 import { validateUser } from "../middlewares/authentication"
 import { requestingUser } from '../middlewares/authentication'
+import { request } from 'http'
 // Create a new debug instance
 const debug = Debug('fed22_photos:photo_controller')
 
 // GET alla photos
 export const index = async (req: Request, res: Response) => {
-
-    console.log(req.headers.authorization)
     
     try {
         const photos = await prisma.photo.findMany({
@@ -18,7 +17,7 @@ export const index = async (req: Request, res: Response) => {
                 user_id: requestingUser.id
             }
         })
-
+        
         res.send({
             status: "success",
             data: photos,
@@ -36,14 +35,22 @@ export const index = async (req: Request, res: Response) => {
 export const show = async (req: Request, res: Response) => {
     const photoId = Number(req.params.photoId)
     try {
-        const album = await prisma.photo.findUniqueOrThrow({
+        const photo = await prisma.photo.findFirst({
             where: {
                 id: photoId,
+                user_id: requestingUser.id,
             },
         })
+        if (!photo) {
+            res.status(401).send({
+                status: "fail",
+                data: "401 unauthorized"
+            })
+            return
+        }
         res.send({
             status: "success",
-            data: album,
+            data: photo,
         })
     } catch (err) {
         debug(`hittar inte photo med id: ${photoId}`, err)
@@ -79,7 +86,7 @@ export const store = async (req: Request, res: Response) => {
         })
     } catch (err) {
         debug("ERROR when creating photo", req.body, err)
-
+        
         res.status(500).send({
             status: "error",
             message: "500: Internal server error"
@@ -88,13 +95,51 @@ export const store = async (req: Request, res: Response) => {
 }
 
 /**
- * Update a resource
- */
+* Uppdatera photo
+*/
+const test = { count: 0}
 export const update = async (req: Request, res: Response) => {
-}
-
-/**
- * Delete a resource
- */
-export const destroy = async (req: Request, res: Response) => {
+    const photoId = Number(req.params.photoId)
+    const { title, url, comment } = req.body
+    
+    try {
+        // hitta först fotot användaren vill uppdatera
+        const photo = await prisma.photo.findFirst({
+            where: {
+                id: photoId,
+                user_id: requestingUser.id,
+            },
+        })
+        // om användaren inte "äger" det fotot, avbryt och skicka 401
+        if (!photo) {
+            res.status(401).send({
+                status: "fail",
+                data: "401 unauthorized"
+            })
+            return
+        }
+        // om användaren äger fotot, uppdatera med ny info
+        const updatedPhoto = await prisma.photo.update({
+            where: {
+                id: photoId
+            },
+            data: {
+                title,
+                url,
+                comment
+            },
+        })
+        res.send({
+            status: "success",
+            data: updatedPhoto
+        })
+    } catch (err) {
+        debug("ERROR when updating photo", req.body, err)
+        
+        res.status(500).send({
+            status: "error",
+            message: "500: Internal server error"
+        })
+    }
+    
 }

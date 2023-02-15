@@ -2,27 +2,22 @@ import Debug from 'debug'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import prisma from '../prisma'
-
+import { validateUser } from "../middlewares/authentication"
+import { requestingUser } from '../middlewares/authentication'
 // Create a new debug instance
 const debug = Debug('fed22_photos:photo_controller')
 
-// gör ny index funktion
-
-// kolla header.authorization, ta ut lösenord och användar namn man skickar in
-
-// kolla email mot server, ta ut id på user
-
-// ta lösenord från header, gör om till base64 och jämför lösenord med sever
-
-// nej? unauthorized
-
-// ja? ta ut bilder med som har samma userId som användarens id
-
-
 // GET alla photos
 export const index = async (req: Request, res: Response) => {
+
+    console.log(req.headers.authorization)
+    
     try {
-        const photos = await prisma.photo.findMany()
+        const photos = await prisma.photo.findMany({
+            where: {
+                user_id: requestingUser.id
+            }
+        })
 
         res.send({
             status: "success",
@@ -68,14 +63,14 @@ export const store = async (req: Request, res: Response) => {
             data: validationErrors.array(),
         })
     }
-    const { title, url, comment, user_id } = req.body
+    const { title, url, comment } = req.body
     try {
         const photo = await prisma.photo.create({
             data: {
                 title,
                 url,
                 comment,
-                user_id,
+                user_id: requestingUser.id
             }
         })
         res.send({

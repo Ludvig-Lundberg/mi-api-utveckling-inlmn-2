@@ -14,11 +14,13 @@ router.get('/:albumId', show)
 
 // POST/lägg till album
 router.post('/', [
-    
+    body("title").isString().withMessage("must be string").bail().isLength({min:3}).withMessage("minimum 3 characters long")
 ], store)
 
 // PATCH/uppdatera album
-router.patch('/:albumId', [], update)
+router.patch('/:albumId', [
+    body("title").isString().withMessage("must be string").bail().isLength({min:3}).withMessage("minimum 3 characters long")
+], update)
 
 // POST/connect:a photo till album
 router.patch('/:albumId/photos', connect)

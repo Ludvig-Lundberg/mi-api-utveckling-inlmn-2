@@ -14,11 +14,17 @@ router.get('/:photoId', show)
 
 // lägg till photo
 router.post('/', [
-    
+    body("title")   .isString().withMessage("must be string").bail().isLength({min:3}).withMessage("minimum 3 characters long"),
+    body("url")     .isString().withMessage("must be string").bail().isURL().withMessage("must be a url"),
+    body("comment") .isString().withMessage("must be string").bail().isLength({min:3}).withMessage("minimum 3 characters long")
 ], store)
 
 // Uppdatera photo
-router.patch('/:photoId', [], update)
+router.patch('/:photoId', [
+    body("title")   .optional().isString().withMessage("must be string").bail().isLength({min:3}).withMessage("minimum 3 characters long"),
+    body("url")     .optional().isString().withMessage("must be string").bail().isURL().withMessage("must be a url"),
+    body("comment") .optional().isString().withMessage("must be string").bail().isLength({min:3}).withMessage("minimum 3 characters long")
+], update)
 
 
 export default router

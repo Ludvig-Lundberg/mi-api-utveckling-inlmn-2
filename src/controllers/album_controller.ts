@@ -38,6 +38,9 @@ export const show = async (req: Request, res: Response) => {
                 id: albumId,
                 user_id: requestingUser.id,
             },
+            include: {
+                photo: true
+            }
         })
         if (!album) {
             res.status(401).send({
@@ -92,7 +95,13 @@ export const store = async (req: Request, res: Response) => {
 // PATCH/uppdatera album
 export const update = async (req: Request, res: Response) => {
     const albumId = Number(req.params.albumId)
-
+    const validationErrors = validationResult(req)
+    if (!validationErrors.isEmpty()) {
+        return res.status(400).send({
+            status: "fail",
+            data: validationErrors.array(),
+        })
+    }
 
     try {
         const album = await prisma.album.findFirst({
@@ -136,6 +145,14 @@ export const update = async (req: Request, res: Response) => {
 export const connect = async (req: Request, res: Response) => {
     const albumId = Number(req.params.albumId)
     const photoId = req.body.photo_id
+    const validationErrors = validationResult(req)
+    if (!validationErrors.isEmpty()) {
+        return res.status(400).send({
+            status: "fail",
+            data: validationErrors.array(),
+        })
+    }
+    
     try {
         // kolla om albumet tillhör användaren
         const album = await prisma.album.findFirst({

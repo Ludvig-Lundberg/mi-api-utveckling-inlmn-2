@@ -98,7 +98,14 @@ export const store = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
     const photoId = Number(req.params.photoId)
     const { title, url, comment } = req.body
-    
+    const validationErrors = validationResult(req)
+    if (!validationErrors.isEmpty()) {
+        return res.status(400).send({
+            status: "fail",
+            data: validationErrors.array(),
+        })
+    }
+
     try {
         // hitta först fotot användaren vill uppdatera
         const photo = await prisma.photo.findFirst({

@@ -1,12 +1,7 @@
-import Debug from 'debug'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import prisma from '../prisma'
-import { validateUser } from "../middlewares/authentication"
 import { requestingUser } from '../middlewares/authentication'
-import { request } from 'http'
-// Create a new debug instance
-const debug = Debug('fed22_photos:photo_controller')
 
 // GET alla photos
 export const index = async (req: Request, res: Response) => {
@@ -22,7 +17,6 @@ export const index = async (req: Request, res: Response) => {
             data: photos,
         })
     } catch (err) {
-        debug("Kunde inte hitta photos", err)
         res.status(500).send({
             status: "error",
             message: "500: Internal server error"
@@ -52,7 +46,6 @@ export const show = async (req: Request, res: Response) => {
             data: photo,
         })
     } catch (err) {
-        debug(`hittar inte photo med id: ${photoId}`, err)
         res.status(404).send({
             status: "error",
             message: "404: photo not found"
@@ -84,8 +77,6 @@ export const store = async (req: Request, res: Response) => {
             data: photo
         })
     } catch (err) {
-        debug("ERROR when creating photo", req.body, err)
-        
         res.status(500).send({
             status: "error",
             message: "500: Internal server error"
@@ -105,7 +96,7 @@ export const update = async (req: Request, res: Response) => {
             data: validationErrors.array(),
         })
     }
-
+    
     try {
         // hitta först fotot användaren vill uppdatera
         const photo = await prisma.photo.findFirst({
@@ -138,8 +129,6 @@ export const update = async (req: Request, res: Response) => {
             data: updatedPhoto
         })
     } catch (err) {
-        debug("ERROR when updating photo", req.body, err)
-        
         res.status(500).send({
             status: "error",
             message: "500: Internal server error"

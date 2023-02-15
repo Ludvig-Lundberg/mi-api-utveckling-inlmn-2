@@ -3,28 +3,24 @@
  */
 import express from 'express'
 import { body } from 'express-validator'
-import { index, show, store, update, destroy } from '../controllers/album_controller'
+import { index, show, store, update, connect } from '../controllers/album_controller'
 const router = express.Router()
 
-// alla albums
+// GET/alla albums
 router.get('/', index)
 
-// specifik album
+// GET/specifik album
 router.get('/:albumId', show)
 
-// lägg till album
+// POST/lägg till album
 router.post('/', [
     
 ], store)
 
-/**
- * PATCH /resource/:resourceId
- */
-router.patch('/:resourceId', [], update)
+// PATCH/uppdatera album
+router.patch('/:albumId', [], update)
 
-/**
- * DELETE /resource/:resourceId
- */
-router.delete('/:resourceId', destroy)
+// POST/connect:a photo till album
+router.patch('/:albumId/photos', connect)
 
 export default router

@@ -10,7 +10,6 @@ const debug = Debug('fed22_photos:photo_controller')
 
 // GET alla photos
 export const index = async (req: Request, res: Response) => {
-    
     try {
         const photos = await prisma.photo.findMany({
             where: {
@@ -94,10 +93,8 @@ export const store = async (req: Request, res: Response) => {
     }
 }
 
-/**
-* Uppdatera photo
-*/
-const test = { count: 0}
+
+// Uppdatera photo
 export const update = async (req: Request, res: Response) => {
     const photoId = Number(req.params.photoId)
     const { title, url, comment } = req.body

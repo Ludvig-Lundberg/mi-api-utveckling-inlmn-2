@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import prisma from '../prisma'
 import bcrypt from "bcrypt"
-import user from "../types/index"
+//import user from "../types/index"
 
 // Create a new debug instance
 const debug = Debug('fed22_photos:validation')

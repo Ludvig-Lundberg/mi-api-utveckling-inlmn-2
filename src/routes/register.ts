@@ -6,7 +6,7 @@ const router = express.Router()
 
 // lägg till användare
 router.post('/', [
-    body("email").isEmail().bail().custom(async (email:string) => {
+    body("email").isEmail().withMessage("must be email").bail().custom(async (email:string) => {
         const user = await prisma.user.findUnique({
             where: {
                 email: email,
@@ -16,9 +16,9 @@ router.post('/', [
             return Promise.reject("Email already in use")
         }
     }),
-    body("password").isString().isLength({min: 6}),
-    body("first_name").isString().isLength({min: 3}),
-    body("last_name").isString().isLength({min: 3})
+    body("password")  .isString().withMessage("must be string").bail().isLength({min: 6, max: 75}).withMessage("must be between 3 and 75 characters long"),
+    body("first_name").isString().withMessage("must be string").bail().isLength({min: 3, max: 25}).withMessage("must be between 3 and 25 characters long "),
+    body("last_name") .isString().withMessage("must be string").bail().isLength({min: 3, max: 25}).withMessage("must be between 3 and 25 characters long ")
 ], register)
 
 

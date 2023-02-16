@@ -24,7 +24,7 @@ export const index = async (req: Request, res: Response) => {
     }
 }
 
-// specifik album
+// specifik album 
 export const show = async (req: Request, res: Response) => {
     const albumId = Number(req.params.albumId)
     try {

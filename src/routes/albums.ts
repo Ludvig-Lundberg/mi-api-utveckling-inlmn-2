@@ -11,12 +11,12 @@ router.get('/:albumId', show)
 
 // POST/lägg till album
 router.post('/', [
-    body("title").isString().withMessage("must be string").bail().isLength({min:3}).withMessage("minimum 3 characters long")
+    body("title").isString().withMessage("must be string").bail().trim().isLength({min:3}).withMessage("minimum 3 characters long")
 ], store)
 
 // PATCH/uppdatera album
 router.patch('/:albumId', [
-    body("title").isString().withMessage("must be string").bail().isLength({min:3}).withMessage("minimum 3 characters long")
+    body("title").isString().withMessage("must be string").bail().trim().isLength({min:3}).withMessage("minimum 3 characters long")
 ], update)
 
 // POST/connect:a photo till album

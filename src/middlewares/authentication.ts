@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import prisma from '../prisma'
 import bcrypt from "bcrypt"
+import Debug from 'debug';
 
 export let requestingUser: any;
+const debug = Debug("api-2:authentication")
 
 export const validateUser = async (req: Request, res: Response, next: NextFunction) => {
     
@@ -38,6 +40,9 @@ export const validateUser = async (req: Request, res: Response, next: NextFuncti
     }
     
     const result = await bcrypt.compare(password, user.password)
+    console.log("plain:", password)
+    console.log("hashed:", user.password)
+    console.log(result)
     if (!result) {
         return res.status(401).send({
             status: "fail",

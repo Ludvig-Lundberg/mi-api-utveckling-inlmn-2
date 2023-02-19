@@ -20,6 +20,6 @@ router.patch('/:albumId', [
 ], update)
 
 // POST/connect:a photo till album
-router.patch('/:albumId/photos', connect)
+router.post('/:albumId/photos', connect)
 
 export default router

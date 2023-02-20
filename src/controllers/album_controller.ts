@@ -32,9 +32,6 @@ export const show = async (req: Request, res: Response) => {
             where: {
                 id: albumId,
                 user_id: requestingUser.id,
-            },
-            include: {
-                photo: true
             }
         })
         if (!album) {
@@ -60,10 +57,11 @@ export const show = async (req: Request, res: Response) => {
 export const store = async (req: Request, res: Response) => {
     const validationErrors = validationResult(req)
     if (!validationErrors.isEmpty()) {
-        return res.status(400).send({
+        res.status(400).send({
             status: "fail",
             data: validationErrors.array(),
         })
+        return
     }
     try {
         const album = await prisma.album.create({
@@ -89,10 +87,11 @@ export const update = async (req: Request, res: Response) => {
     const albumId = Number(req.params.albumId)
     const validationErrors = validationResult(req)
     if (!validationErrors.isEmpty()) {
-        return res.status(400).send({
+        res.status(400).send({
             status: "fail",
             data: validationErrors.array(),
         })
+        return
     }
     
     try {
@@ -137,10 +136,11 @@ export const connect = async (req: Request, res: Response) => {
     const photoId = req.body.photo_id
     const validationErrors = validationResult(req)
     if (!validationErrors.isEmpty()) {
-        return res.status(400).send({
+        res.status(400).send({
             status: "fail",
             data: validationErrors.array(),
         })
+        return
     }
     
     try {
@@ -152,10 +152,11 @@ export const connect = async (req: Request, res: Response) => {
             }
         })
         if (!album) {
-            return res.status(401).send({
+            res.status(401).send({
                 status: "fail",
                 data: "401 unauthorized, NOT UR ALBUM"
             })
+            return 
         }
         // kolla om fotot tillhör användaren
         const photo = await prisma.photo.findFirst({
@@ -165,10 +166,11 @@ export const connect = async (req: Request, res: Response) => {
             }
         })
         if (!photo) {
-            return res.status(401).send({
+            res.status(401).send({
                 status: "fail",
                 data: "401 unauthorized, NOT UR PHOTO"
             })
+            return 
         }
         const updatedAlbum = await prisma.album.update({
             where: {

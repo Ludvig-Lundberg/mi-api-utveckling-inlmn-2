@@ -32,6 +32,9 @@ export const show = async (req: Request, res: Response) => {
             where: {
                 id: albumId,
                 user_id: requestingUser.id,
+            },
+            include: {
+                photo: true
             }
         })
         if (!album) {

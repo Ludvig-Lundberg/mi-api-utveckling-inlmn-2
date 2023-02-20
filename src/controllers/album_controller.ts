@@ -152,11 +152,10 @@ export const connect = async (req: Request, res: Response) => {
             }
         })
         if (!album) {
-            res.status(401).send({
+            return res.status(401).send({
                 status: "fail",
                 data: "401 unauthorized, NOT UR ALBUM"
             })
-            return
         }
         // kolla om fotot tillhör användaren
         const photo = await prisma.photo.findFirst({
@@ -166,11 +165,10 @@ export const connect = async (req: Request, res: Response) => {
             }
         })
         if (!photo) {
-            res.status(401).send({
+            return res.status(401).send({
                 status: "fail",
                 data: "401 unauthorized, NOT UR PHOTO"
             })
-            return
         }
         const updatedAlbum = await prisma.album.update({
             where: {

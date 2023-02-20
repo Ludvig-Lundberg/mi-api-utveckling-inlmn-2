@@ -3,8 +3,6 @@ import albums from "./albums"
 import photos from "./photos"
 import register from "./register"
 import { validateUser } from "../middlewares/authentication"
-
-// instantiate a new router
 const router = express.Router()
 
 router.get('/', (req, res) => {

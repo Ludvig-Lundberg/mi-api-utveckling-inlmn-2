@@ -5,8 +5,6 @@ import routes from './routes'
 const app = express()
 app.use(express.json())
 app.use(morgan('dev'))
-
-// Use routes
 app.use(routes)
 
 export default app

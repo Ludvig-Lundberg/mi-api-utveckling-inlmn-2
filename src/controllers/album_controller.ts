@@ -37,6 +37,9 @@ export const show = async (req: Request, res: Response) => {
                 photo: true
             }
         })
+        console.log(album)
+        console.log(album!.user_id)
+        console.log(album!.photo)
         if (!album) {
             res.status(401).send({
                 status: "fail",

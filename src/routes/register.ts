@@ -16,7 +16,7 @@ router.post('/', [
             return Promise.reject("Email already in use")
         }
     }),
-    body("password")  .isString().withMessage("must be string").bail().normalizeEmail().isLength({min: 6, max: 75}).withMessage("must be between 3 and 75 characters long"),
+    body("password")  .isString().withMessage("must be string").bail().isLength({min: 6, max: 191}).withMessage("must be between 3 and 191 characters long"),
     body("first_name").isString().withMessage("must be string").bail().trim().isLength({min: 3, max: 25}).withMessage("must be between 3 and 25 characters long "),
     body("last_name") .isString().withMessage("must be string").bail().trim().isLength({min: 3, max: 25}).withMessage("must be between 3 and 25 characters long ")
 ], register)

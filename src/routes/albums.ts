@@ -20,6 +20,8 @@ router.patch('/:albumId', [
 ], update)
 
 // POST/connect:a photo till album
-router.post('/:albumId/photos', connect)
+router.post('/:albumId/photos', [
+    body("photo_id").isInt().withMessage("Must be a id/number")
+], connect)
 
 export default router
